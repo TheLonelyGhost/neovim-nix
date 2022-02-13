@@ -265,7 +265,7 @@ in
         init_options = {
           linters = {
             shellcheck = {
-              command = "shellcheck",
+              command = "${lsp.shellcheck}/bin/shellcheck",
               debounce = 100,
               args = {
                 "--format=json",
