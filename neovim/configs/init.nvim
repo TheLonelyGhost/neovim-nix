@@ -9,9 +9,10 @@ augroup vimrcEx
         \   exe "normal g`\"" |
         \ endif
 
-  autocmd BufReadPost .envrc
+  autocmd BufRead,BufNewFile .envrc
         \ set ft=sh
-
+  autocmd BufRead,BufNewFile *.nvim
+        \ set filetype=vim
 augroup END
 
 set number
