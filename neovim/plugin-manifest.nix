@@ -1,5 +1,13 @@
 {pkgs, lsp, ...}:
 
+let
+  allGrammars =
+    # NOTE: left here in case the bundled grammars in pkgs.tree-sitter aren't as up-to-date
+    # pkgs.lib.mapAttrsToList (name: value: value) (
+    #   pkgs.lib.filterAttrs (name: value: name != "recurseForDerivations") pkgs.tree-sitter-grammars
+    # );
+    [];
+in
 [
   {
     plugin = pkgs.vimPlugins.editorconfig-vim;
@@ -27,6 +35,12 @@
   }
   {
     plugin = pkgs.vimPlugins.nvim-treesitter;
+    buildInputs = [
+      pkgs.tree-sitter
+      pkgs.nodejs
+      pkgs.gcc
+      pkgs.git
+    ] ++ allGrammars;
     config = ''
       lua <<EOH
       require'nvim-treesitter.configs'.setup {

@@ -10,6 +10,26 @@ let
   # lack of attribute so... there.
   pluginPackages = pkgs.lib.remove null (map (x: if x ? plugin then x.plugin else null) normalizedPlugins);
 
+  pluginBuildInputs = pkgs.lib.unique (pkgs.lib.foldl (a: b:
+    let
+      depsA = if builtins.isList a then a # maybe this is the aggregate of our work so far
+        else if a ? buildInputs then a.buildInputs
+        else [];
+      depsB = if builtins.isList b then b
+        else if b ? buildInputs then b.buildInputs
+        else [];
+    in
+    depsA ++ depsB
+    ) [] normalizedPlugins);
+
+  pluginNativeBuildInputs = pkgs.lib.unique (pkgs.lib.foldl (a: b:
+    let
+      depsA = if a != null && a ? nativeBuildInputs then a.nativeBuildInputs else [];
+      depsB = if b != null && b ? nativeBuildInputs then b.nativeBuildInputs else [];
+    in
+    (depsA ++ depsB)
+  ) [] normalizedPlugins);
+
   neovimConfig = pkgs.neovimUtils.makeNeovimConfig {
     plugins = normalizedPlugins;
 
@@ -24,8 +44,13 @@ let
     # not assigned to a plugin.
     customRc = customRc + (builtins.readFile ./config/init.vim);
   };
+
+  neovimBasePackage = pkgs.neovim-unwrapped.overrideAttrs (oldAttrs: {
+    buildInputs = (if oldAttrs ? buildInputs then oldAttrs.buildInputs else []) ++ pluginBuildInputs;
+    nativeBuildInputs = (if oldAttrs ? nativeBuildInputs then oldAttrs.nativeBuildInputs else []) ++ pluginNativeBuildInputs;
+  });
 in
-pkgs.wrapNeovimUnstable pkgs.neovim-unwrapped {
+pkgs.wrapNeovimUnstable neovimBasePackage {
   inherit extraName;
 
   inherit (neovimConfig) neovimRcContent python3Env rubyEnv luaEnv withNodeJs;

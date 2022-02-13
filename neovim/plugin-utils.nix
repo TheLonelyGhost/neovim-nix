@@ -9,6 +9,8 @@ let
            config = <viml-string>;
            dependencies = [<plugin-attrset> ...];
            weight = <priority-uint>;
+           buildInputs = [<derivation> ...];
+           nativeBuildInputs = [<derivation> ...];
          }
 
      `plugin` represents the vim-plugin formatted nix package.
@@ -22,6 +24,12 @@ let
      the lesser is determined to occur first in the overall
      configuration. Defaults to 50 so plugins of declared higher or
      lower priority reflow around unspecified priority plugins.
+
+     `buildInputs` and `nativeBuildInputs` contain packages that will be
+     added to the neovim `buildInputs` and `nativeBuildInputs` respectively.
+     This is generally used if a neovim plugin has a native package that
+     must be available at compile time (`nativeBuildInputs`) of neovim or at
+     runtime (`buildInputs`) in the PATH.
   */
 
   isValidPluginAttrset = plug:
@@ -34,7 +42,7 @@ let
       ++
       # type checks {{ 
       (pkgs.lib.optionals (plug ? plugin) [
-        (isValidPluginDerivation plug)
+        (pkgs.lib.isDerivation plug)
       ])
       ++
       (pkgs.lib.optionals (plug ? config) [
@@ -48,11 +56,16 @@ let
       (pkgs.lib.optionals (plug ? weight) [
         (isValidWeight plug.weight)
       ])
+      ++
+      (pkgs.lib.optionals (plug ? buildInputs) [
+        pkgs.lib.all (x: pkgs.lib.isDerivation x) plug.buildInputs
+      ])
+      ++
+      (pkgs.lib.optionals (plug ? nativeBuildInputs) [
+        pkgs.lib.all (x: pkgs.lib.isDerivation x) plug.nativeBuildInputs
+      ])
       # }}
     );
-
-  isValidPluginDerivation = deriv:
-    builtins.hasAttr "name" deriv;
 
   defaultWeight = 50;
   isValidWeight = weight:
@@ -91,6 +104,8 @@ let
       config = "";
       dependencies = [ ];
       weight = defaultWeight;
+      buildInputs = [ ];
+      nativeBuildInputs = [ ];
     } //
     # If no `plugin` attribute, must be a bare package
     (if x ? plugin then x else { plugin = x; });
@@ -143,6 +158,11 @@ let
       weight = builtins.min (weightGrabber plug1) (weightGrabber plug2);
 
       plugin = someAttr [ "plugin" ] null [ plug1 plug2 ];
+
+      buildInputsGrabber = pkgs.lib.attrByPath [ "buildInputs" ] [];
+      buildInputs = pkgs.lib.unique ((buildInputsGrabber plug1) ++ (buildInputsGrabber plug2));
+      nativeBuildInputsGrabber = pkgs.lib.attrByPath [ "nativeBuildInputs" ] [];
+      nativeBuildInputs = pkgs.lib.unique ((nativeBuildInputsGrabber plug1) ++ (nativeBuildInputsGrabber plug2));
     in
 
     # null should never happen for both, but because `foldl` sometimes
@@ -151,10 +171,18 @@ let
     # say "try <first>, then try <second>, else <error-value>", then
     # enforce that error value with an assertion here.
     assert plugin != null;
+
+    # Note that we don't include the `dependencies` attribute. That
+    # needlessly increases complexity when we should have flattened the
+    # dependency graph by now.
     {
       inherit plugin config;
     } // pkgs.lib.optional (isValidWeight weight) {
       inherit weight;
+    } // pkgs.lib.optional (pkgs.lib.all (x: pkgs.lib.isDerivation x) buildInputs) {
+      inherit buildInputs;
+    } // pkgs.lib.optional (pkgs.lib.all (x: pkgs.lib.isDerivation x) nativeBuildInputs) {
+      inherit nativeBuildInputs;
     };
 
   /* A specialized `unique` lambda that is customized to handle a list
@@ -187,16 +215,11 @@ let
   sortPlugins = plugins:
     pkgs.lib.sort sortByWeightAlgo plugins;
 
-  trimPluginAttrs = plugins:
-    map (x: builtins.removeAttrs x [ "weight" "dependencies" ]) plugins;
-
   processPlugins = plugins:
-    trimPluginAttrs (
-      sortPlugins (
-        dedupePlugins (
-          flattenPlugins (
-            normalizePlugins plugins
-          )
+    sortPlugins (
+      dedupePlugins (
+        flattenPlugins (
+          normalizePlugins plugins
         )
       )
     )
@@ -206,6 +229,6 @@ in
   inherit processPlugins sortByWeightAlgo;
 
   # for debugging, to be removed later:
-  inherit trimPluginAttrs sortPlugins dedupePlugins combinePlugins flattenPlugins normalizePlugins normalize recurseDependencies;
-  inherit isValidWeight isValidConfig isValidDependencies isValidPluginAttrset isValidPluginDerivation;
+  inherit sortPlugins dedupePlugins combinePlugins flattenPlugins normalizePlugins normalize recurseDependencies;
+  inherit isValidWeight isValidConfig isValidDependencies isValidPluginAttrset;
 }
