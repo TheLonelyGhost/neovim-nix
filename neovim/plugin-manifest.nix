@@ -15,9 +15,8 @@ in
   {
     plugin = pkgs.vimPlugins.vim-gitgutter;
   }
-  {
-    plugin = pkgs.vimPlugins.vim-polyglot;
-  }
+  # Disabled because treesitter highlighting is faster/better for most syntaxes:
+  # { plugin = pkgs.vimPlugins.vim-polyglot; }
   {
     plugin = pkgs.vimPlugins.nvim-treesitter-refactor;
   }
@@ -63,8 +62,18 @@ in
             },
           },
         },
+        highlight = {
+          enable = true,
+        },
+        indent = {
+          enable = true,
+        },
       }
       EOH
+
+      set foldmethod=expr
+      set foldexpr=nvim_treesitter#foldexpr()
+      set foldlevelstart=9
     '';
   }
   {
