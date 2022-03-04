@@ -1,4 +1,4 @@
-{pkgs, lsp, ...}:
+{ pkgs, lsp, ... }:
 
 let
   allGrammars =
@@ -6,7 +6,26 @@ let
     # pkgs.lib.mapAttrsToList (name: value: value) (
     #   pkgs.lib.filterAttrs (name: value: name != "recurseForDerivations") pkgs.tree-sitter-grammars
     # );
-    [];
+    [ ];
+  lspLanguages = [
+    "bash"
+    (pkgs.lib.optionalString (builtins.elem pkgs.system lsp.scry.meta.platforms) "crystal")
+    "css"
+    "graphviz"
+    "docker"
+    "go"
+    "html"
+    "json"
+    "nim"
+    "nix"
+    "python"
+    "ruby"
+    "rust"
+    "terraform"
+    "typescript"
+    "vim"
+    "yaml"
+  ];
 in
 [
   {
@@ -140,176 +159,194 @@ in
   }
   {
     plugin = pkgs.vimPlugins.nvim-lspconfig;
-    config = pkgs.lib.concatStringsSep "\n" [
+    # config = "";
+    config = (pkgs.lib.concatStringsSep "\n\n" [
       "lua <<EOH"
       (builtins.readFile ./configs/lspconfig-before.lua)
-      ''
-      -- Bash
-      nvim_lsp.bashls.setup {
-        on_attach = on_attach,
-        capabilities = capabilities,
-        cmd = { '${lsp.bash-language-server}/bin/bash-language-server', 'start' },
-      }
-
-      -- Crystal
-      nvim_lsp.scry.setup {
-        on_attach = on_attach,
-        capabilities = capabilities,
-        cmd = { '${lsp.scry}/bin/scry' },
-      }
-
-      -- CSS / SCSS
-      nvim_lsp.stylelint_lsp.setup {
-        on_attach = on_attach,
-        capabilities = capabilities,
-        cmd = { '${lsp.stylelint-lsp}/bin/stylelint-lsp', '--stdio' },
-      }
-
-      -- Graphviz (dot)
-      nvim_lsp.dotls.setup {
-        on_attach = on_attach,
-        capabilities = capabilities,
-        cmd = { '${lsp.dot-language-server}/bin/dot-language-server', '--stdio' },
-      }
-
-      -- Docker
-      nvim_lsp.dockerls.setup {
-        on_attach = on_attach,
-        capabilities = capabilities,
-        cmd = { '${lsp.dockerfile-language-server}/bin/docker-langserver', '--stdio' },
-      }
-
-      -- Go
-      nvim_lsp.gopls.setup {
-        on_attach = on_attach,
-        capabilities = capabilities,
-        cmd = { '${lsp.gopls}/bin/gopls' },
-      }
-
-      -- HTML
-      nvim_lsp.html.setup {
-        on_attach = on_attach,
-        capabilities = capabilities,
-        cmd = { '${lsp.vscode-langservers-extracted}/bin/vscode-html-language-server', '--stdio' },
-      }
-
-      -- JSON
-      nvim_lsp.jsonls.setup {
-        on_attach = on_attach,
-        capabilities = capabilities,
-        cmd = { '${lsp.vscode-langservers-extracted}/bin/vscode-json-language-server', '--stdio' },
-      }
-
-      -- Nim
-      nvim_lsp.nimls.setup {
-        on_attach = on_attach,
-        capabilities = capabilities,
-        cmd = { '${lsp.nim-language-server}/bin/nimlsp', '--stdio' },
-      }
-
-      -- Nix
-      nvim_lsp.rnix.setup {
-        on_attach = on_attach,
-        capabilities = capabilities,
-        cmd = { '${lsp.nix-language-server}/bin/rnix-lsp' },
-      }
-
-      -- Python
-      nvim_lsp.pyright.setup {
-        on_attach = on_attach,
-        capabilities = capabilities,
-        cmd = { '${lsp.pyright}/bin/pyright-langserver', '--stdio' },
-      }
-
-      -- Ruby
-      nvim_lsp.solargraph.setup {
-        on_attach = on_attach,
-        capabilities = capabilities,
-        cmd = { '${lsp.solargraph}/bin/solargraph', 'stdio' },
-      }
-
-      -- Rust
-      nvim_lsp.rust_analyzer.setup {
-        on_attach = on_attach,
-        capabilities = capabilities,
-        cmd = { '${lsp.rust-analyzer}/bin/rust-analyzer' },
-      }
-
-      -- Terraform
-      nvim_lsp.terraformls.setup {
-        on_attach = on_attach,
-        capabilities = capabilities,
-        cmd = { '${lsp.terraform-language-server}/bin/terraform-ls', 'serve' },
-      }
-
-      -- TypeScript
-      nvim_lsp.tsserver.setup {
-        on_attach = on_attach,
-        capabilities = capabilities,
-        cmd = { '${lsp.typescript-language-server}/bin/typescript-language-server', '--stdio' },
-      }
-
-      -- Vim
-      nvim_lsp.vimls.setup {
-        on_attach = on_attach,
-        capabilities = capabilities,
-        cmd = { '${lsp.vim-language-server}/bin/vim-language-server', '--stdio' },
-      }
-
-      -- YAML
-      nvim_lsp.yamlls.setup {
-        on_attach = on_attach,
-        capabilities = capabilities,
-        cmd = { '${lsp.yaml-language-server}/bin/yaml-language-server', '--stdio' },
-      }
-
-      -- Everything Else
-      nvim_lsp.diagnosticls.setup {
-        on_attach = on_attach,
-        capabilities = capabilities,
-        cmd = {"${lsp.diagnostic-language-server}/bin/diagnostic-languageserver", "--stdio"},
-        filetypes = {
-          "sh"
-        },
-        init_options = {
-          linters = {
-            shellcheck = {
-              command = "${lsp.shellcheck}/bin/shellcheck",
-              debounce = 100,
-              args = {
-                "--format=json",
-                "-"
-              },
-              offsetLine = 0,
-              offsetColumn = 0,
-              sourceName = "shellcheck",
-              formatLines = 1,
-              parseJson = {
-                sourceName = "file",
-                -- sourceNameFilter = true,
-                line = "line",
-                column = "column",
-                endLine = "endLine",
-                endColumn = "endColumn",
-                message = "''${message} [SC''${code}]",
-                security = "level"
-              },
-              securities = {
-                error = "error",
-                warning = "warning",
-                note = "info",
-                style = "hint"
-              }
-            }
-          },
+      (pkgs.lib.optionalString (builtins.elem "bash" lspLanguages) ''
+        -- Bash
+        nvim_lsp.bashls.setup {
+          on_attach = on_attach,
+          capabilities = capabilities,
+          cmd = { '${lsp.bash-language-server}/bin/bash-language-server', 'start' },
+        }
+      '')
+      (pkgs.lib.optionalString (builtins.elem "crystal" lspLanguages) ''
+        -- Crystal
+        nvim_lsp.scry.setup {
+          on_attach = on_attach,
+          capabilities = capabilities,
+          cmd = { '${lsp.scry}/bin/scry' },
+        }
+      '')
+      (pkgs.lib.optionalString (builtins.elem "css" lspLanguages) ''
+        -- CSS / SCSS
+        nvim_lsp.stylelint_lsp.setup {
+          on_attach = on_attach,
+          capabilities = capabilities,
+          cmd = { '${lsp.stylelint-lsp}/bin/stylelint-lsp', '--stdio' },
+        }
+      '')
+      (pkgs.lib.optionalString (builtins.elem "graphviz" lspLanguages) ''
+        -- Graphviz (dot)
+        nvim_lsp.dotls.setup {
+          on_attach = on_attach,
+          capabilities = capabilities,
+          cmd = { '${lsp.dot-language-server}/bin/dot-language-server', '--stdio' },
+        }
+      '')
+      (pkgs.lib.optionalString (builtins.elem "docker" lspLanguages) ''
+        -- Docker
+        nvim_lsp.dockerls.setup {
+          on_attach = on_attach,
+          capabilities = capabilities,
+          cmd = { '${lsp.dockerfile-language-server}/bin/docker-langserver', '--stdio' },
+        }
+      '')
+      (pkgs.lib.optionalString (builtins.elem "go" lspLanguages) ''
+        -- Go
+        nvim_lsp.gopls.setup {
+          on_attach = on_attach,
+          capabilities = capabilities,
+          cmd = { '${lsp.gopls}/bin/gopls' },
+        }
+      '')
+      (pkgs.lib.optionalString (builtins.elem "html" lspLanguages) ''
+        -- HTML
+        nvim_lsp.html.setup {
+          on_attach = on_attach,
+          capabilities = capabilities,
+          cmd = { '${lsp.vscode-langservers-extracted}/bin/vscode-html-language-server', '--stdio' },
+        }
+      '')
+      (pkgs.lib.optionalString (builtins.elem "json" lspLanguages) ''
+        -- JSON
+        nvim_lsp.jsonls.setup {
+          on_attach = on_attach,
+          capabilities = capabilities,
+          cmd = { '${lsp.vscode-langservers-extracted}/bin/vscode-json-language-server', '--stdio' },
+        }
+      '')
+      (pkgs.lib.optionalString (builtins.elem "nim" lspLanguages) ''
+        -- Nim
+        nvim_lsp.nimls.setup {
+          on_attach = on_attach,
+          capabilities = capabilities,
+          cmd = { '${lsp.nim-language-server}/bin/nimlsp', '--stdio' },
+        }
+      '')
+      (pkgs.lib.optionalString (builtins.elem "nix" lspLanguages) ''
+        -- Nix
+        nvim_lsp.rnix.setup {
+          on_attach = on_attach,
+          capabilities = capabilities,
+          cmd = { '${lsp.nix-language-server}/bin/rnix-lsp' },
+        }
+      '')
+      (pkgs.lib.optionalString (builtins.elem "python" lspLanguages) ''
+        -- Python
+        nvim_lsp.pyright.setup {
+          on_attach = on_attach,
+          capabilities = capabilities,
+          cmd = { '${lsp.pyright}/bin/pyright-langserver', '--stdio' },
+        }
+      '')
+      (pkgs.lib.optionalString (builtins.elem "ruby" lspLanguages) ''
+        -- Ruby
+        nvim_lsp.solargraph.setup {
+          on_attach = on_attach,
+          capabilities = capabilities,
+          cmd = { '${lsp.solargraph}/bin/solargraph', 'stdio' },
+        }
+      '')
+      (pkgs.lib.optionalString (builtins.elem "rust" lspLanguages) ''
+        -- Rust
+        nvim_lsp.rust_analyzer.setup {
+          on_attach = on_attach,
+          capabilities = capabilities,
+          cmd = { '${lsp.rust-analyzer}/bin/rust-analyzer' },
+        }
+      '')
+      (pkgs.lib.optionalString (builtins.elem "terraform" lspLanguages) ''
+        -- Terraform
+        nvim_lsp.terraformls.setup {
+          on_attach = on_attach,
+          capabilities = capabilities,
+          cmd = { '${lsp.terraform-language-server}/bin/terraform-ls', 'serve' },
+        }
+      '')
+      (pkgs.lib.optionalString (builtins.elem "typescript" lspLanguages) ''
+        -- TypeScript
+        nvim_lsp.tsserver.setup {
+          on_attach = on_attach,
+          capabilities = capabilities,
+          cmd = { '${lsp.typescript-language-server}/bin/typescript-language-server', '--stdio' },
+        }
+      '')
+      (pkgs.lib.optionalString (builtins.elem "vim" lspLanguages) ''
+        -- Vim
+        nvim_lsp.vimls.setup {
+          on_attach = on_attach,
+          capabilities = capabilities,
+          cmd = { '${lsp.vim-language-server}/bin/vim-language-server', '--stdio' },
+        }
+      '')
+      (pkgs.lib.optionalString (builtins.elem "yaml" lspLanguages) ''
+        -- YAML
+        nvim_lsp.yamlls.setup {
+          on_attach = on_attach,
+          capabilities = capabilities,
+          cmd = { '${lsp.yaml-language-server}/bin/yaml-language-server', '--stdio' },
+        }
+      '')
+      (pkgs.lib.optionalString true ''
+        -- Everything Else
+        nvim_lsp.diagnosticls.setup {
+          on_attach = on_attach,
+          capabilities = capabilities,
+          cmd = {"${lsp.diagnostic-language-server}/bin/diagnostic-languageserver", "--stdio"},
           filetypes = {
-            sh = "shellcheck"
+            "sh"
+          },
+          init_options = {
+            linters = {'' + (pkgs.lib.optionalString (builtins.elem "bash" lspLanguages) ''
+              shellcheck = {
+                command = "${lsp.shellcheck}/bin/shellcheck",
+                debounce = 100,
+                args = {
+                  "--format=json",
+                  "-"
+                },
+                offsetLine = 0,
+                offsetColumn = 0,
+                sourceName = "shellcheck",
+                formatLines = 1,
+                parseJson = {
+                  sourceName = "file",
+                  -- sourceNameFilter = true,
+                  line = "line",
+                  column = "column",
+                  endLine = "endLine",
+                  endColumn = "endColumn",
+                  message = "''${message} [SC''${code}]",
+                  security = "level"
+                },
+                securities = {
+                  error = "error",
+                  warning = "warning",
+                  note = "info",
+                  style = "hint"
+                }
+              },'') + ''
+            },
+            filetypes = {'' + (pkgs.lib.optionalString (builtins.elem "bash" lspLanguages) ''
+              sh = "shellcheck",'') + ''
+            },
           }
         }
-      }
-      ''
+      '')
       (builtins.readFile ./configs/lspconfig-after.lua)
       "EOH"
-    ];
+    ]);
   }
 ]
