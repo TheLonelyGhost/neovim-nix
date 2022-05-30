@@ -1,4 +1,4 @@
-{ pkgs, lsp, ... }:
+{ pkgs, lsp, neovimPlugins, ... }:
 
 let
   isSupported = pkg:
@@ -10,6 +10,7 @@ let
     #   pkgs.lib.filterAttrs (name: value: name != "recurseForDerivations") pkgs.tree-sitter-grammars
     # );
     [ ];
+
   lspLanguages = [
     (pkgs.lib.optionalString (isSupported lsp.bash-language-server) "bash")
     (pkgs.lib.optionalString (isSupported lsp.scry) "crystal")
@@ -33,6 +34,9 @@ in
 [
   {
     plugin = pkgs.vimPlugins.editorconfig-vim;
+  }
+  {
+    plugin = neovimPlugins.thelonelyghost-defaults;
   }
   {
     plugin = pkgs.vimPlugins.vim-gitgutter;

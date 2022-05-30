@@ -42,7 +42,7 @@ let
     # prior to both the plugin-specific configs and this
     # customRc, which represents the overarching customizations
     # not assigned to a plugin.
-    customRc = customRc + (builtins.readFile ./config/init.vim);
+    customRc = customRc;
   };
 
   neovimBasePackage = pkgs.neovim-unwrapped.overrideAttrs (oldAttrs: {

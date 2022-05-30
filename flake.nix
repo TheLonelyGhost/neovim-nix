@@ -22,6 +22,10 @@
 
         lsp = lsp-nix.outputs.packages."${system}";
 
+        managedPlugins = import ./plugins {
+          inherit pkgs;
+        };
+
         suggestedPlugins = import ./neovim/plugin-manifest.nix {
           inherit pkgs lsp;
 
@@ -29,6 +33,7 @@
             # put any other packages for vim plugins, managed by
             # this flake, in this attribute set so we can make it
             # available as part of the `manifest` array.
+            inherit (managedPlugins) thelonelyghost-defaults;
           };
         };
 
