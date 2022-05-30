@@ -55,13 +55,13 @@ in
     '';
   }
   {
-    plugin = pkgs.vimPlugins.nvim-treesitter;
+    plugin = pkgs.vimPlugins.nvim-treesitter.withPlugins (plugins: pkgs.tree-sitter.allGrammars);
     buildInputs = [
       pkgs.tree-sitter
       pkgs.nodejs
       pkgs.gcc
       pkgs.git
-    ] ++ allGrammars;
+    ];
     config = ''
       lua <<EOH
       require'nvim-treesitter.configs'.setup {
