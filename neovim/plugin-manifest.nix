@@ -1,6 +1,9 @@
 { pkgs, lsp, ... }:
 
 let
+  isSupported = pkg:
+    builtins.elem pkgs.system pkg.meta.platforms;
+
   allGrammars =
     # NOTE: left here in case the bundled grammars in pkgs.tree-sitter aren't as up-to-date
     # pkgs.lib.mapAttrsToList (name: value: value) (
@@ -8,23 +11,23 @@ let
     # );
     [ ];
   lspLanguages = [
-    "bash"
-    (pkgs.lib.optionalString (builtins.elem pkgs.system lsp.scry.meta.platforms) "crystal")
-    "css"
-    "graphviz"
-    "docker"
-    "go"
-    "html"
-    "json"
-    "nim"
-    "nix"
-    "python"
-    "ruby"
-    "rust"
-    "terraform"
-    "typescript"
-    "vim"
-    "yaml"
+    (pkgs.lib.optionalString (isSupported lsp.bash-language-server) "bash")
+    (pkgs.lib.optionalString (isSupported lsp.scry) "crystal")
+    (pkgs.lib.optionalString (isSupported lsp.stylelint-lsp) "css")
+    (pkgs.lib.optionalString (isSupported lsp.dot-language-server) "graphviz")
+    (pkgs.lib.optionalString (isSupported lsp.dockerfile-language-server) "docker")
+    (pkgs.lib.optionalString (isSupported lsp.gopls) "go")
+    (pkgs.lib.optionalString (isSupported lsp.vscode-langservers-extracted) "html")
+    (pkgs.lib.optionalString (isSupported lsp.vscode-langservers-extracted) "json")
+    (pkgs.lib.optionalString (isSupported lsp.nim-language-server) "nim")
+    (pkgs.lib.optionalString (isSupported lsp.nix-language-server) "nix")
+    (pkgs.lib.optionalString (isSupported lsp.pyright) "python")
+    (pkgs.lib.optionalString (isSupported lsp.solargraph) "ruby")
+    (pkgs.lib.optionalString (isSupported lsp.rust-analyzer) "rust")
+    (pkgs.lib.optionalString (isSupported lsp.terraform-language-server) "terraform")
+    (pkgs.lib.optionalString (isSupported lsp.typescript-language-server) "typescript")
+    (pkgs.lib.optionalString (isSupported lsp.vim-language-server) "vim")
+    (pkgs.lib.optionalString (isSupported lsp.yaml-language-server) "yaml")
   ];
 in
 [
@@ -299,7 +302,7 @@ in
           cmd = { '${lsp.yaml-language-server}/bin/yaml-language-server', '--stdio' },
         }
       '')
-      (pkgs.lib.optionalString true ''
+      (pkgs.lib.optionalString (builtins.elem pkgs.system lsp.diagnostic-language-server.meta.platforms) ''
         -- Everything Else
         nvim_lsp.diagnosticls.setup {
           on_attach = on_attach,
