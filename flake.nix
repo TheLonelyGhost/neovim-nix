@@ -44,12 +44,14 @@
         };
 
         # some default neovim config
-        neovim = customized {
-          plugins = suggestedPlugins;
-        };
+        # neovim = customized {
+        #   plugins = suggestedPlugins;
+        # };
+
+        neovim = pkgs.neovim-unwrapped;
       in
       {
-        devShell = pkgs.mkShell {
+        devShells.default = pkgs.mkShell {
           nativeBuildInputs = [
             pkgs.bashInteractive
             pkgs.gnumake
@@ -59,8 +61,10 @@
         };
 
         packages = {
-          inherit customized neovim pluginUtils suggestedPlugins;
+          # inherit customized neovim pluginUtils suggestedPlugins;
+          inherit neovim;
+
+          default = neovim;
         };
-        defaultPackage = neovim;
       });
 }
