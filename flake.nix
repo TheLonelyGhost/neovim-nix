@@ -1,12 +1,14 @@
 {
   description = "Neovim in a box";
-  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
-  inputs.flake-utils.url = "github:numtide/flake-utils";
-  inputs.flake-compat = {
-    url = "github:edolstra/flake-compat";
-    flake = false;
+  inputs = {
+    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+
+    flake-utils.url = "github:numtide/flake-utils";
+    flake-compat.url = "github:edolstra/flake-compat";
+    flake-compat.flake = false;
+
+    lsp-nix.url = "github:thelonelyghost/lsp-nix";
   };
-  inputs.lsp-nix.url = "github:thelonelyghost/lsp-nix";
 
   outputs = { self, nixpkgs, flake-utils, flake-compat, lsp-nix }:
     flake-utils.lib.eachDefaultSystem (system:
