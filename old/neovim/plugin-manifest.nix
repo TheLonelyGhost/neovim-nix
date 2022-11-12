@@ -313,7 +313,7 @@ in
           capabilities = capabilities,
           cmd = {"${lsp.diagnostic-language-server}/bin/diagnostic-languageserver", "--stdio"},
           filetypes = {
-            "sh"
+            "sh",
           },
           init_options = {
             linters = {'' + (pkgs.lib.optionalString (builtins.elem "bash" lspLanguages) ''
@@ -322,7 +322,7 @@ in
                 debounce = 100,
                 args = {
                   "--format=json",
-                  "-"
+                  "-",
                 },
                 offsetLine = 0,
                 offsetColumn = 0,
@@ -336,20 +336,20 @@ in
                   endLine = "endLine",
                   endColumn = "endColumn",
                   message = "''${message} [SC''${code}]",
-                  security = "level"
+                  security = "level",
                 },
                 securities = {
                   error = "error",
                   warning = "warning",
                   note = "info",
-                  style = "hint"
-                }
+                  style = "hint",
+                },
               },'') + ''
             },
             filetypes = {'' + (pkgs.lib.optionalString (builtins.elem "bash" lspLanguages) ''
               sh = "shellcheck",'') + ''
             },
-          }
+          },
         }
       '')
       (builtins.readFile ./configs/lspconfig-after.lua)
