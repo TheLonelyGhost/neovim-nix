@@ -4,9 +4,8 @@ let
   nvim-lsp = import ./lsp {
     inherit pkgs lsp;
   };
-  thelonelyghostDefaults = import ../config {
-    inherit pkgs;
-  };
+  thelonelyghostDefaults = import ../config { inherit pkgs; };
+  catppuccin = import ../plugins/catppuccin { inherit pkgs; };
 in
 [
   {
@@ -128,20 +127,27 @@ in
     '';
   }
   {
-    plugin = pkgs.vimPlugins.lsp-status-nvim;
-  }
-  {
-    plugin = pkgs.vimPlugins.gruvbox-community;
+    plugin = catppuccin;
     config = ''
-      let g:gruvbox_contrast_dark = 'hard'
-      if exists('+termguicolors')
-        let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum;"
-        let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum;"
-      endif
-      let g:gruvbox_invert_selection = '0'
-      colorscheme gruvbox
-      set background=dark
+    colorscheme catppuccin-mocha
     '';
   }
+  # {
+  #   plugin = pkgs.vimPlugins.gruvbox-community;
+  #   config = ''
+  #     let g:gruvbox_contrast_dark = 'hard'
+  #     if exists('+termguicolors')
+  #       let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum;"
+  #       let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum;"
+  #     endif
+  #     let g:gruvbox_invert_selection = '0'
+  #     colorscheme gruvbox
+  #     set background=dark
+  #   '';
+  # }
+  # Candidate for removal? Not really used...
+  # {
+  #   plugin = pkgs.vimPlugins.lsp-status-nvim;
+  # }
   nvim-lsp
 ]
