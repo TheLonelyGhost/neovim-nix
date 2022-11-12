@@ -20,9 +20,10 @@ in
   }
   # Disabled because treesitter highlighting is faster/better for most syntaxes:
   # { plugin = pkgs.vimPlugins.vim-polyglot; }
-  {
-    plugin = pkgs.vimPlugins.nvim-treesitter-refactor;
-  }
+  # Disabled because this oversteps treesitter vs. LSP functionality
+  # {
+  #   plugin = pkgs.vimPlugins.nvim-treesitter-refactor;
+  # }
   {
     plugin = pkgs.vimPlugins.nvim-treesitter-context;
     config = ''
@@ -46,27 +47,28 @@ in
     config = ''
       lua <<EOH
       require'nvim-treesitter.configs'.setup {
-        refactor = {
-          highlight_definitions = { enable = true },
-          smart_rename = {
-            enable = true,
-            keymaps = {
-              smart_rename = "grr",
-            },
-          },
-          navigation = {
-            enable = true,
-            keymaps = {
-              goto_definition_lsp_fallback = "gnd",
-              list_definitions = "gnD",
-              list_definitions_toc = "gO",
-              goto_next_usage = "<a-*>",
-              goto_previous_usage = "<a-#>",
-            },
-          },
-        },
+        -- refactor = {
+        --   highlight_definitions = { enable = true },
+        --   smart_rename = {
+        --     enable = true,
+        --     keymaps = {
+        --       smart_rename = "grr",
+        --     },
+        --   },
+        --   navigation = {
+        --     enable = false,
+        --     keymaps = {
+        --       goto_definition_lsp_fallback = "gnd",
+        --       list_definitions = "gnD",
+        --       list_definitions_toc = "gO",
+        --       goto_next_usage = "<a-*>",
+        --       goto_previous_usage = "<a-#>",
+        --     },
+        --   },
+        -- },
         highlight = {
           enable = true,
+          additional_vim_regex_highlighting = true,
         },
         indent = {
           enable = true,
@@ -76,7 +78,7 @@ in
 
       set foldmethod=expr
       set foldexpr=nvim_treesitter#foldexpr()
-      set foldlevelstart=9
+      set foldlevelstart=5
     '';
   }
   {
@@ -107,7 +109,7 @@ in
       set shortmess+=c
 
       lua <<EOH
-      local cmp = require'cmp'
+      local cmp = require('cmp')
 
       cmp.setup({
         snippet = {

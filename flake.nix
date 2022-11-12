@@ -33,7 +33,6 @@
         };
 
         packages = {
-          # inherit customized neovim pluginUtils suggestedPlugins;
           inherit neovim;
 
           default = neovim;
