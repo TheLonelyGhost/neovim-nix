@@ -8,6 +8,9 @@ let
   neovimConfig = pkgs.neovimUtils.makeNeovimConfig { inherit plugins; };
 
   neovim = pkgs.neovim.override {
+    vimAlias = true;
+    viAlias = true;
+
     configure = {
       customRC = neovimConfig.neovimRcContent;
       packages.thelonelyghost = {
