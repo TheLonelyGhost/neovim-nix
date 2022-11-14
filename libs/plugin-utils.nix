@@ -1,6 +1,13 @@
 { pkgs, ... }:
 
 let
+  isSupportedDrv = drv:
+    builtins.elem pkgs.system drv.meta.platforms;
+
+  toLua = obj:
+    "vim.json.decode([[ " + (builtins.toJSON obj) + " ]])";
+
+
   /* Plugins are assumed to adhere to the following schema, denoted as
      <plugin-attrset> hereafter:
 
@@ -84,4 +91,6 @@ let
 in
 {
   inherit normalizePlugins isValidPluginAttrset;
+
+  inherit isSupportedDrv toLua;
 }

@@ -120,33 +120,33 @@ let
 
   configFor = lang:
     let
-      inherit (tools.${lang}) package cmd nvimLspAttribute;
-      inherit (utils) listToLisp;
+      inherit (tools.${lang}) package cmd nvimLspAttribute settings;
+
+      config = {
+        inherit cmd settings;
+      };
     in
-    # TODO: Convert nix attrset to lua for `settings`
     ''
       -- Language: ${lang}
-      lspconfig['${nvimLspAttribute}'].setup {
-        cmd = ${listToLisp cmd},
-        -- settings = {},
-      }
+      lspconfig['${nvimLspAttribute}'].setup(${utils.toLua config})
     '';
 
 in
 {
   inherit tools;
 
-  # Dependencies
-  buildInputs = utils.collectBuildInputs tools;
-
   # Lua configuration of the nvim-lspconfig plugin
   config =
     let
       preamble = builtins.readFile ./preamble.lua;
       individualConfigs = builtins.map configFor (builtins.attrNames tools);
+      diagnostic = import ./diagnostic.nix { inherit pkgs lsp; };
     in
-    builtins.concatStringsSep "\n" ([preamble] ++ individualConfigs);
-
-  # Functions (Prefix with our specific data)
-  # isSupportedLang = utils.isSupportedLang tools;
+    builtins.concatStringsSep "\n" (
+      [preamble]
+      ++
+      individualConfigs
+      ++
+      [diagnostic.config]
+    );
 }

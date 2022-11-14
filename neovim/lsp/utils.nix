@@ -1,12 +1,10 @@
 { pkgs, ... }:
 
 let
-  isSupportedDrv = drv:
-    builtins.elem pkgs.system drv.meta.platforms;
+  lib = import ../../libs/plugin-utils.nix { inherit pkgs; };
 in
 {
-  listToLisp = set:
-    "{'" + (builtins.concatStringsSep "', '" set) + "'}";
+  inherit (lib) toLua;
 
   isSupportedLang = tools: lang:
     builtins.elem lang (builtins.attrNames tools);
@@ -15,5 +13,5 @@ in
     pkgs.lib.unique (builtins.map (k: v: v.package) tools);
 
   filterSupportedTools = tools:
-    pkgs.lib.filterAttrs (k: v: isSupportedDrv v.package) tools;
+    pkgs.lib.filterAttrs (k: v: lib.isSupportedDrv v.package) tools;
 }
