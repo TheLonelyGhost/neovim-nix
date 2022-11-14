@@ -1,4 +1,4 @@
-{ pkgs, lsp, ... }:
+{ pkgs, lsp, tree-sitter, ... }:
 
 let
   nvim-lsp = import ./lsp {

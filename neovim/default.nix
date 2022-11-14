@@ -1,9 +1,9 @@
-{ pkgs, lsp, ... }:
+{ pkgs, lsp, tree-sitter, ... }:
 
 let
   pluginUtils = import ../libs/plugin-utils.nix { inherit pkgs; };
 
-  plugins = pluginUtils.normalizePlugins (import ./plugins.nix { inherit pkgs lsp; });
+  plugins = pluginUtils.normalizePlugins (import ./plugins.nix { inherit pkgs lsp tree-sitter; });
 
   neovimConfig = pkgs.neovimUtils.makeNeovimConfig { inherit plugins; };
 
