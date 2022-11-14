@@ -8,96 +8,58 @@ let
   catppuccin = import ../plugins/catppuccin { inherit pkgs; };
 in
 [
-  {
-    plugin = pkgs.vimPlugins.editorconfig-vim;
-  }
-  {
-    plugin = thelonelyghostDefaults;
-  }
-  {
-    plugin = pkgs.vimPlugins.vim-gitgutter;
-  }
-  # Disabled because treesitter highlighting is faster/better for most syntaxes:
-  # { plugin = pkgs.vimPlugins.vim-polyglot; }
-  # Disabled because this oversteps treesitter vs. LSP functionality
-  # {
-  #   plugin = pkgs.vimPlugins.nvim-treesitter-refactor;
-  # }
-  {
-    plugin = pkgs.vimPlugins.nvim-treesitter-context;
-    config = ''
-      lua <<EOH
-      require'treesitter-context'.setup {
-        enable = true,
-        throttle = true,
-        max_lines = 0, -- how many lines the window should span (Values <= 0 means no limit)
-      }
-      EOH
-    '';
-  }
-  {
-    plugin = pkgs.vimPlugins.nvim-treesitter.withPlugins (_: pkgs.tree-sitter.allGrammars);
-    # buildInputs = [
-    #   pkgs.tree-sitter
-    #   pkgs.nodejs
-    #   pkgs.gcc
-    #   pkgs.git
-    # ];
-    config = ''
-      lua <<EOH
-      require'nvim-treesitter.configs'.setup {
-        -- refactor = {
-        --   highlight_definitions = { enable = true },
-        --   smart_rename = {
-        --     enable = true,
-        --     keymaps = {
-        --       smart_rename = "grr",
-        --     },
-        --   },
-        --   navigation = {
-        --     enable = false,
-        --     keymaps = {
-        --       goto_definition_lsp_fallback = "gnd",
-        --       list_definitions = "gnD",
-        --       list_definitions_toc = "gO",
-        --       goto_next_usage = "<a-*>",
-        --       goto_previous_usage = "<a-#>",
-        --     },
-        --   },
-        -- },
-        highlight = {
-          enable = true,
-          additional_vim_regex_highlighting = true,
-        },
-        indent = {
-          enable = true,
-        },
-      }
-      EOH
+  { plugin = pkgs.vimPlugins.editorconfig-vim; }
+  { plugin = thelonelyghostDefaults; }
+  { plugin = pkgs.vimPlugins.vim-gitgutter; }
 
-      set foldmethod=expr
-      set foldexpr=nvim_treesitter#foldexpr()
-      set foldlevelstart=5
-    '';
-  }
-  {
-    plugin = pkgs.vimPlugins.vim-vsnip;
-  }
-  {
-    plugin = pkgs.vimPlugins.vim-vsnip-integ;
-  }
-  {
-    plugin = pkgs.vimPlugins.cmp-buffer;
-  }
-  {
-    plugin = pkgs.vimPlugins.cmp-cmdline;
-  }
-  {
-    plugin = pkgs.vimPlugins.cmp-path;
-  }
-  {
-    plugin = pkgs.vimPlugins.cmp-nvim-lsp;
-  }
+  # TODO: Replace with tree-sitter. Highlighting is faster/better for most syntaxes:
+  { plugin = pkgs.vimPlugins.vim-polyglot; }
+
+  # Disabled because tree-sitter isn't yet stable for some rather important languages (bash, rust)
+  # {
+  #   plugin = pkgs.vimPlugins.nvim-treesitter-context;
+  #   config = ''
+  #     lua <<EOH
+  #     require'treesitter-context'.setup {
+  #       enable = true,
+  #       throttle = true,
+  #       max_lines = 0, -- how many lines the window should span (Values <= 0 means no limit)
+  #     }
+  #     EOH
+  #   '';
+  # }
+  # { plugin = pkgs.vimPlugins.nvim-treesitter-pyfold; }
+  # {
+  #   plugin = pkgs.vimPlugins.nvim-treesitter.withPlugins (_: tree-sitter.tree-sitter.allGrammars);
+  #   config = ''
+  #     lua <<EOH
+  #     require'nvim-treesitter.configs'.setup {
+  #       highlight = {
+  #         enable = true,
+  #         additional_vim_regex_highlighting = true,
+  #       },
+  #       indent = {
+  #         enable = true,
+  #       },
+  #       pyfold = {
+  #         enable = true,
+  #         custom_foldtext = true, -- sets provided foldtext on window where module is active
+  #       },
+  #     }
+  #     EOH
+  #     set foldmethod=expr
+  #     set foldexpr=nvim_treesitter#foldexpr()
+  #     set nofoldenable
+  #     set foldlevelstart=5
+  #   '';
+  # }
+
+  { plugin = pkgs.vimPlugins.vim-vsnip; }
+  { plugin = pkgs.vimPlugins.vim-vsnip-integ; }
+  { plugin = pkgs.vimPlugins.cmp-buffer; }
+  { plugin = pkgs.vimPlugins.cmp-cmdline; }
+  { plugin = pkgs.vimPlugins.cmp-path; }
+  { plugin = pkgs.vimPlugins.cmp-nvim-lsp; }
   {
     plugin = pkgs.vimPlugins.nvim-cmp;
     config = ''
@@ -126,28 +88,25 @@ in
       EOH
     '';
   }
-  {
-    plugin = catppuccin;
-    config = ''
-    colorscheme catppuccin-mocha
-    '';
-  }
+
   # {
-  #   plugin = pkgs.vimPlugins.gruvbox-community;
+  #   plugin = catppuccin;
   #   config = ''
-  #     let g:gruvbox_contrast_dark = 'hard'
-  #     if exists('+termguicolors')
-  #       let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum;"
-  #       let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum;"
-  #     endif
-  #     let g:gruvbox_invert_selection = '0'
-  #     colorscheme gruvbox
-  #     set background=dark
+  #   colorscheme catppuccin-mocha
   #   '';
   # }
-  # Candidate for removal? Not really used...
-  # {
-  #   plugin = pkgs.vimPlugins.lsp-status-nvim;
-  # }
+  {
+    plugin = pkgs.vimPlugins.gruvbox-community;
+    config = ''
+      let g:gruvbox_contrast_dark = 'hard'
+      if exists('+termguicolors')
+        let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum;"
+        let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum;"
+      endif
+      let g:gruvbox_invert_selection = '0'
+      colorscheme gruvbox
+      set background=dark
+    '';
+  }
   nvim-lsp
 ]
