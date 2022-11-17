@@ -11,9 +11,11 @@
     lsp-nix.url = "github:thelonelyghost/lsp-nix";
     lsp-nix.inputs.overlays.follows = "overlays";
     lsp-nix.inputs.flake-utils.follows = "flake-utils";
+    lsp-nix.inputs.flake-compat.follows = "flake-compat";
     tree-sitter-nix.url = "github:thelonelyghost/tree-sitter-nix";
     tree-sitter-nix.inputs.overlays.follows = "overlays";
     tree-sitter-nix.inputs.flake-utils.follows = "flake-utils";
+    tree-sitter-nix.inputs.flake-compat.follows = "flake-compat";
   };
 
   outputs = { self, nixpkgs, flake-utils, flake-compat, overlays, lsp-nix, tree-sitter-nix }:
