@@ -16,3 +16,4 @@ augroup vimrcEx
 augroup END
 
 set number
+set mouse=
