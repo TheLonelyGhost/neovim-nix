@@ -11,6 +11,19 @@ in
   { plugin = pkgs.vimPlugins.editorconfig-vim; }
   { plugin = thelonelyghostDefaults; }
   {
+    plugin = pkgs.vimPlugins.lsp-colors-nvim;
+    config = ''
+      lua <<EOH
+      require('lsp-colors').setup {
+        Error = "#db4b4b",
+        Warning = "#e0af68",
+        Information = "#0db9d7",
+        Hint = "#10B981",
+      }
+      EOH
+    '';
+  }
+  {
     plugin = pkgs.vimPlugins.gitsigns-nvim;
     config = ''
       lua <<EOH
