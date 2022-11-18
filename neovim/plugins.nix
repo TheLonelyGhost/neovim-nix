@@ -41,6 +41,15 @@ in
       EOH
     '';
   }
+  {
+    plugin = pkgs.vimPlugins.telescope-nvim;
+    config = ''
+      lua <<EOH
+      require('telescope').setup {
+      }
+      EOH
+    '';
+  }
 
   # TODO: Replace with tree-sitter. Highlighting is faster/better for most syntaxes:
   { plugin = pkgs.vimPlugins.vim-polyglot; }
