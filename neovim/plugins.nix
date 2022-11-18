@@ -10,7 +10,24 @@ in
 [
   { plugin = pkgs.vimPlugins.editorconfig-vim; }
   { plugin = thelonelyghostDefaults; }
-  { plugin = pkgs.vimPlugins.vim-gitgutter; }
+  {
+    plugin = pkgs.vimPlugins.gitsigns-nvim;
+    config = ''
+      lua <<EOH
+      require('gitsigns').setup {
+        -- numhl = true,
+        current_line_blame = true,
+        current_line_blame_opts = {
+          -- virt_text_pos = 'right_align',
+          ignore_whitespace = true,
+        },
+        yadm = {
+          enable = false,
+        },
+      }
+      EOH
+    '';
+  }
 
   # TODO: Replace with tree-sitter. Highlighting is faster/better for most syntaxes:
   { plugin = pkgs.vimPlugins.vim-polyglot; }
