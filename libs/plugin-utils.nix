@@ -2,7 +2,7 @@
 
 let
   isSupportedDrv = drv:
-    builtins.elem pkgs.system drv.meta.platforms;
+    (builtins.elem pkgs.system drv.meta.platforms) && (if drv.meta ? broken then !drv.meta.broken else true);
 
   toLua = obj:
     "vim.json.decode([[ " + (builtins.toJSON obj) + " ]])";
