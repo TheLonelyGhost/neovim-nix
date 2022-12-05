@@ -3,39 +3,33 @@
 let
   utils = import ./utils.nix { inherit pkgs; };
 
+  ruffConfig = ../../config/ruff.toml;
+
   #
   # THIS IS THE SECTION YOU WANT TO MODIFY {{
   allLinters = {
     # @see: https://github.com/iamcco/diagnostic-languageserver/wiki/Linters
-    flake8 = rec {
+    ruff = rec {
       # meta
-      package = lsp.flake8;
+      package = lsp.ruff;
       filetypes = [ "python" ];
 
       # direct translation
-      command = "${package}/bin/flake8";
-      args = ["--format" "%(row)d,%(col)d,%(code).1s,%(code)s: %(text)s" "-"];
+      command = "${package}/bin/ruff";
+      args = [ "--format" "json" "--config" ruffConfig "--stdin-filename" "%filepath" "-" ];
       debounce = 100;
-      offsetLine = 0;
-      offsetColumn = 0;
       sourceName = package.pname;
-      formatLines = 1;
-      formatPattern = [
-        ''(\\d+),(\\d+),([A-Z]),(.*)(\\r|\\n)*$''
-        {
-          line = 1;
-          column = 2;
-          security = 3;
-          message = 4;
-        }
-      ];
-      securities = {
-        W = "warning";
-        E = "error";
-        F = "error";
-        C = "error";
-        N = "error";
+      parseJson = {
+        sourceName = "filename";
+        line = "location.row";
+        column = "location.column";
+        endLine = "end_location.row";
+        endColumn = "end_location.column";
+        message = ''[''${code}] ''${message}'';
       };
+      # securities = {
+      #   undefined = "warning";
+      # };
     };
     golangci-lint = rec {
       # meta
@@ -265,14 +259,27 @@ let
   };
   allFormatters = {
     # @see: https://github.com/iamcco/diagnostic-languageserver/wiki/Formatters
-    isort = rec {
+    ruff = rec {
       # meta
-      package = lsp.isort;
+      package = lsp.ruff;
       filetypes = [ "python" ];
 
       # direct translation
-      command = "${package}/bin/isort";
-      args = [ "--quiet" "-" ];
+      command = "${package}/bin/ruff";
+      args = [ "--format" "json" "--config" ruffConfig "--stdin-filename" "%filepath" "--fix" "-" ];
+      debounce = 100;
+      sourceName = package.pname;
+      parseJson = {
+        sourceName = "filename";
+        line = "location.row";
+        endLine = "end_location.row";
+        column = "location.column";
+        endColumn = "end_location.column";
+        message = ''[''${code}] ''${message}'';
+      };
+      # securities = {
+      #   undefined = "warning";
+      # };
     };
     yapf = rec {
       # meta
@@ -288,9 +295,9 @@ let
   #
 
   linters = utils.filterSupportedTools allLinters;
-  linterFiletypes = flipForFiletypes linters;
+  linterFiletypes = utils.flipForFiletypes linters;
   formatters = utils.filterSupportedTools allFormatters;
-  formatterFiletypes = flipForFiletypes formatters;
+  formatterFiletypes = utils.flipForFiletypes formatters;
 
   filetypesSupported = pkgs.lib.unique
     (builtins.concatLists [
@@ -298,52 +305,13 @@ let
       (builtins.attrNames formatterFiletypes)
     ]);
 
-  /*
-    Grabs the filetype field of each tool and makes it
-    the key in an attrset, setting the value to the key
-    off the previous attrset.
-    
-    Example:
-    
-    flipForFiletypes { a = { filetypes = ["sh", "text"]; }; b = { filetypes = ["go"]; }; }
-    => { sh = "a"; text = "a"; go = "b"; }
-  */
-  flipForFiletypes = tools:
-    let
-      # flipKeyWithValue { a = "b"; }
-      # => { b = "a"; }
-      flipKeyWithValue = k: v:
-        { "${v}" = k; };
-
-      # filetypePairings { a = { filetypes = ["sh", "text"]; }; b = { filetypes = ["go"]; }; }
-      # => [{ sh = "a"; } { text = "a"; } { go = "b"; }]
-      filetypePairings = set:
-        pkgs.lib.flatten (pkgs.lib.mapAttrsToList
-          (name: value:
-            builtins.map (v: { "${v}" = name; }) value.filetypes
-          )
-          set);
-
-      # flippedPairings [{ sh = "a"; } { text = "a"; } { go = "b"; }]
-      # => { sh = "a"; text = "a"; go = "b"; }
-      flippedPairings = sets:
-        builtins.mapAttrs (name: value: builtins.head value) (pkgs.lib.zipAttrs sets);
-    in
-    flippedPairings (filetypePairings tools);
-
-  configLinter = tool:
-    pkgs.lib.filterAttrs (n: v: n != "package" && n != "filetypes") tool;
-
-  configFormatter = tool:
-    pkgs.lib.filterAttrs (n: v: n != "package" && n != "filetypes") tool;
-
   config = {
     cmd = [ "${lsp.diagnostic-language-server}/bin/diagnostic-languageserver" "--stdio" ];
     filetypes = filetypesSupported;
     init_options = {
-      linters = pkgs.lib.mapAttrs (name: value: configLinter value) linters;
+      linters = pkgs.lib.mapAttrs (_: utils.configLinter) linters;
       filetypes = linterFiletypes;
-      formatters = pkgs.lib.mapAttrs (name: value: configFormatter value) formatters;
+      formatters = pkgs.lib.mapAttrs (_: utils.configFormatter) formatters;
       formatFiletypes = formatterFiletypes;
     };
   };

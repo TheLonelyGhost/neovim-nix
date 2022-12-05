@@ -120,7 +120,7 @@ let
 
   configFor = lang:
     let
-      inherit (tools.${lang}) package cmd nvimLspAttribute settings;
+      inherit (tools.${lang}) cmd nvimLspAttribute settings;
 
       config = {
         inherit cmd settings;

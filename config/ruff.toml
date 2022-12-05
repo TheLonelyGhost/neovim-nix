@@ -1,0 +1,28 @@
+# Enable entire classes of rules
+select = [
+  "E", # PyFlakes
+  "F", # pycodestyle
+  "I", # isort
+  "U", # pyupgrade
+  # "ERA", # eradicate (commented-out code)
+  "S", # bandit
+  "C", # flake8-comprehensions
+  "T100", # flake8-debugger
+  "B", # flake8-bugbear
+  "YTT", # use `sys.version_info` instead of `sys.version`
+  "C901", # complexity
+  "RUF", # builtin rules to `ruff`
+  "M001", # unused `noqa` comment
+]
+
+# Never enforce `E501` (line length violations)
+ignore = ["E501"]
+
+line-length = 200
+
+[flake8-tidy-imports]
+ban-relative-imports = "all"
+
+[per-file-ignores]
+# Ignore `E402` (top-of-file imports only) violations for any `__init__.py`
+"__init__.py" = ["E402"]
