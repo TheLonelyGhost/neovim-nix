@@ -110,7 +110,7 @@ let
       args = [ "--format" "json" "--force-exclusion" "--stdin" "%filepath" ];
       rootPatterns = [ ".git" "go.mod" ];
       debounce = 100;
-      sourceName = if package ? pname then package.pname else "rubocop";
+      sourceName = package.pname or "rubocop";
       parseJson = {
         errorsRoot = "files[0].offenses";
         line = "location.start_line";
@@ -172,7 +172,7 @@ let
       debounce = 100;
       offsetLine = 0;
       offsetColumn = 0;
-      sourceName = if package ? pname then package.pname else "standardjs";
+      sourceName = package.pname or "standardjs";
       formatLines = 1;
       formatPattern = [
         ''^\\s*<\\w+>:(\\d+):(\\d+):\\s+(.*)(\\r|\\n)*$''
@@ -197,7 +197,7 @@ let
       debounce = 100;
       offsetLine = 0;
       offsetColumn = 0;
-      sourceName = if package ? pname then package.pname else "ts-standard";
+      sourceName = package.pname or "ts-standard";
       formatLines = 1;
       formatPattern = [
         ''^\\s*<\\w+>:(\\d+):(\\d+):\\s+(.*)(\\r|\\n)*$''

@@ -3,11 +3,9 @@
 let
   lib = import ../../libs/plugin-utils.nix { inherit pkgs; };
 
-  configLinter = tool:
-    pkgs.lib.filterAttrs (n: v: n != "package" && n != "filetypes") tool;
+  configLinter = pkgs.lib.filterAttrs (n: v: n != "package" && n != "filetypes");
 
-  configFormatter = tool:
-    pkgs.lib.filterAttrs (n: v: n != "package" && n != "filetypes") tool;
+  configFormatter = pkgs.lib.filterAttrs (n: v: n != "package" && n != "filetypes");
 
   /*
     Grabs the filetype field of each tool and makes it
@@ -38,7 +36,7 @@ let
       # flippedPairings [{ sh = "a"; } { text = "a"; } { go = "b"; }]
       # => { sh = "a"; text = "a"; go = "b"; }
       flippedPairings = sets:
-        builtins.mapAttrs (name: value: builtins.head value) (pkgs.lib.zipAttrs sets);
+        builtins.mapAttrs (name: builtins.head) (pkgs.lib.zipAttrs sets);
     in
     flippedPairings (filetypePairings tools);
 
@@ -54,6 +52,5 @@ in
   collectBuildInputs = tools:
     pkgs.lib.unique (builtins.map (k: v: v.package) tools);
 
-  filterSupportedTools = tools:
-    pkgs.lib.filterAttrs (k: v: lib.isSupportedDrv v.package) tools;
+  filterSupportedTools = pkgs.lib.filterAttrs (k: v: lib.isSupportedDrv v.package);
 }

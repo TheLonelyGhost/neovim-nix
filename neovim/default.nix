@@ -20,5 +20,5 @@ let
     };
   };
 in
-assert pkgs.lib.all (x: pluginUtils.isValidPluginAttrset x) plugins -> throw "Invalid format in plugins list";
+assert pkgs.lib.all pluginUtils.isValidPluginAttrset plugins -> throw "Invalid format in plugins list";
 neovim
