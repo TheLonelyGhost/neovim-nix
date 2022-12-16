@@ -74,24 +74,30 @@ let
         style = "hint";
       };
     };
-    nix-linter = rec {
+    statix = rec {
       # meta
-      package = lsp.nix-linter;
+      package = lsp.statix;
       filetypes = [ "nix" ];
 
       # direct translation
-      command = "${package}/bin/nix-linter";
+      command = "${package}/bin/statix";
+      args = [ "check" "--format" "json" "--stdin" ];
       sourceName = package.pname;
       debounce = 100;
       parseJson = {
-        line = "pos.spanBegin.sourceLine";
-        column = "pos.spanBegin.sourceColumn";
-        endLine = "pos.spanEnd.sourceLine";
-        endColumn = "pos.spanEnd.sourceColumn";
-        message = ''''${description}'';
+        # sourceName = "file";
+        errorsRoot = "report";
+        line = "diagnostics[0].at.from.line";
+        column = "diagnostics[0].at.from.column";
+        endLine = "diagnostics[0].at.to.line";
+        endColumn = "diagnostics[0].at.to.column";
+        message = "\${diagnostics[0].message}";
+        security = "severity";
       };
       securities = {
-        undefined = "warning";
+        Warn = "warning";
+        Error = "error";
+        Hint = "hint";
       };
     };
     rubocop = rec {
@@ -306,7 +312,7 @@ let
     ]);
 
   config = {
-    cmd = [ "${lsp.diagnostic-language-server}/bin/diagnostic-languageserver" "--stdio" ];
+    cmd = [ "${lsp.diagnostic-language-server}/bin/diagnostic-languageserver" "--stdio" "--log-level" "4" ];
     filetypes = filetypesSupported;
     init_options = {
       linters = pkgs.lib.mapAttrs (_: utils.configLinter) linters;
