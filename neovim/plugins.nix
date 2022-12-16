@@ -51,47 +51,46 @@ in
     '';
   }
 
-  # TODO: Replace with tree-sitter. Highlighting is faster/better for most syntaxes:
-  { plugin = pkgs.vimPlugins.vim-polyglot; }
+  # Replaced with tree-sitter. Highlighting is faster/better for most syntaxes:
+  # { plugin = pkgs.vimPlugins.vim-polyglot; }
 
-  # Disabled because tree-sitter isn't yet stable for some rather important languages (bash, rust)
-  # {
-  #   plugin = pkgs.vimPlugins.nvim-treesitter-context;
-  #   config = ''
-  #     lua <<EOH
-  #     require'treesitter-context'.setup {
-  #       enable = true,
-  #       throttle = true,
-  #       max_lines = 0, -- how many lines the window should span (Values <= 0 means no limit)
-  #     }
-  #     EOH
-  #   '';
-  # }
-  # { plugin = pkgs.vimPlugins.nvim-treesitter-pyfold; }
-  # {
-  #   plugin = pkgs.vimPlugins.nvim-treesitter.withPlugins (_: tree-sitter.tree-sitter.allGrammars);
-  #   config = ''
-  #     lua <<EOH
-  #     require'nvim-treesitter.configs'.setup {
-  #       highlight = {
-  #         enable = true,
-  #         additional_vim_regex_highlighting = true,
-  #       },
-  #       indent = {
-  #         enable = true,
-  #       },
-  #       pyfold = {
-  #         enable = true,
-  #         custom_foldtext = true, -- sets provided foldtext on window where module is active
-  #       },
-  #     }
-  #     EOH
-  #     set foldmethod=expr
-  #     set foldexpr=nvim_treesitter#foldexpr()
-  #     set nofoldenable
-  #     set foldlevelstart=5
-  #   '';
-  # }
+  {
+    plugin = pkgs.vimPlugins.nvim-treesitter-context;
+    config = ''
+      lua <<EOH
+      require'treesitter-context'.setup {
+        enable = true,
+        throttle = true,
+        max_lines = 0, -- how many lines the window should span (Values <= 0 means no limit)
+      }
+      EOH
+    '';
+  }
+  { plugin = pkgs.vimPlugins.nvim-treesitter-pyfold; }
+  {
+    plugin = tree-sitter.nvim-treesitter.withPlugins (_: tree-sitter.tree-sitter.allGrammars);
+    config = ''
+      lua <<EOH
+      require'nvim-treesitter.configs'.setup {
+        highlight = {
+          enable = true,
+          additional_vim_regex_highlighting = true,
+        },
+        indent = {
+          enable = true,
+        },
+        pyfold = {
+          enable = true,
+          custom_foldtext = true, -- sets provided foldtext on window where module is active
+        },
+      }
+      EOH
+      set foldmethod=expr
+      set foldexpr=nvim_treesitter#foldexpr()
+      set nofoldenable
+      set foldlevelstart=5
+    '';
+  }
 
   { plugin = pkgs.vimPlugins.vim-vsnip; }
   { plugin = pkgs.vimPlugins.vim-vsnip-integ; }
