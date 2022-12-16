@@ -44,11 +44,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1670210316,
-        "narHash": "sha256-1aZ1EsHlRCbheCbM0X1tFCXW7JhdFlWvGf95+dFHxCc=",
+        "lastModified": 1671163049,
+        "narHash": "sha256-HL3sizCt6AIn/kD4Ywh0K4vVe3TdoNsFBTw96JdICH4=",
         "owner": "thelonelyghost",
         "repo": "lsp-nix",
-        "rev": "84fe2b747ddddb4b05c74938c51c91bfd22aff51",
+        "rev": "519728a376f9f6123cb6caeb36f438cadb5d8974",
         "type": "github"
       },
       "original": {

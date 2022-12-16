@@ -36,6 +36,7 @@
           nativeBuildInputs = [
             pkgs.bashInteractive
             pkgs.gnumake
+            pkgs.statix
           ];
           buildInputs = [
             neovim
