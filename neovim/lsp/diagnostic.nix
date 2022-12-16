@@ -5,6 +5,18 @@ let
 
   ruffConfig = ../../config/ruff.toml;
 
+  statix-check = pkgs.writeShellApplication {
+    name = "statix-check";
+
+    runtimeInputs = [
+      lsp.statix
+    ];
+
+    text = ''
+      statix check "$@" && printf '{"report": []}\n'
+    '';
+  };
+
   #
   # THIS IS THE SECTION YOU WANT TO MODIFY {{
   allLinters = {
@@ -80,8 +92,8 @@ let
       filetypes = [ "nix" ];
 
       # direct translation
-      command = "${package}/bin/statix";
-      args = [ "check" "--format" "json" "--stdin" ];
+      command = "${statix-check}/bin/statix-check";
+      args = [ "--format" "json" "--stdin" ];
       sourceName = package.pname;
       debounce = 100;
       parseJson = {
@@ -273,19 +285,15 @@ let
       # direct translation
       command = "${package}/bin/ruff";
       args = [ "--format" "json" "--config" ruffConfig "--stdin-filename" "%filepath" "--fix" "-" ];
-      debounce = 100;
-      sourceName = package.pname;
-      parseJson = {
-        sourceName = "filename";
-        line = "location.row";
-        endLine = "end_location.row";
-        column = "location.column";
-        endColumn = "end_location.column";
-        message = ''[''${code}] ''${message}'';
-      };
-      # securities = {
-      #   undefined = "warning";
-      # };
+    };
+    statix = rec {
+      # meta
+      package = lsp.statix;
+      filetypes = [ "nix" ];
+
+      # direct translation
+      command = "${package}/bin/statix";
+      args = [ "fix" "--stdin" ];
     };
     yapf = rec {
       # meta
