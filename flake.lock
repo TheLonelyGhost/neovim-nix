@@ -44,11 +44,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1671163049,
-        "narHash": "sha256-HL3sizCt6AIn/kD4Ywh0K4vVe3TdoNsFBTw96JdICH4=",
+        "lastModified": 1671394984,
+        "narHash": "sha256-4Tck17r03v3H0/VgoMEKegOcxJXMkjE10WnlmWJlOUg=",
         "owner": "thelonelyghost",
         "repo": "lsp-nix",
-        "rev": "519728a376f9f6123cb6caeb36f438cadb5d8974",
+        "rev": "d584755b520f8c31f0717632dcc8a340723cde9d",
         "type": "github"
       },
       "original": {
@@ -138,11 +138,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1671199846,
-        "narHash": "sha256-3B9joImK3VNTQBHlYuB3ByP5x7/xbhiBkgl6DGl8edo=",
+        "lastModified": 1671395226,
+        "narHash": "sha256-BL17lH7ivJEu3IEwB4B4eYk/YXJ2ovNpr66HmCKDNwg=",
         "owner": "thelonelyghost",
         "repo": "tree-sitter-nix",
-        "rev": "5a79ed893593096dad62753a688fc35c928bfbf9",
+        "rev": "38574262f942b615d9559c3e3141a6502f81e537",
         "type": "github"
       },
       "original": {
