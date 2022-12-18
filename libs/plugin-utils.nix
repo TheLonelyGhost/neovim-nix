@@ -48,17 +48,16 @@ let
       ])
       ++
       (pkgs.lib.optionals (plug ? buildInputs) [
-        pkgs.lib.all (x: pkgs.lib.isDerivation x) plug.buildInputs
+        pkgs.lib.all pkgs.lib.isDerivation plug.buildInputs
       ])
       ++
       (pkgs.lib.optionals (plug ? nativeBuildInputs) [
-        pkgs.lib.all (x: pkgs.lib.isDerivation x) plug.nativeBuildInputs
+        pkgs.lib.all pkgs.lib.isDerivation plug.nativeBuildInputs
       ])
       # }}
     );
 
-  isValidConfig = config:
-    builtins.isString config;
+  isValidConfig = builtins.isString;
 
   /* Ensures a single plugin adheres to the plugin-attrset schema under
      the following circumstances:
@@ -86,8 +85,7 @@ let
 
          plugins = normalizePlugins myManifest;
   */
-  normalizePlugins = plugins:
-    builtins.map normalize plugins;
+  normalizePlugins = builtins.map normalize;
 in
 {
   inherit normalizePlugins isValidPluginAttrset;
