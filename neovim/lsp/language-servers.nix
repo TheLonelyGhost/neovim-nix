@@ -8,12 +8,12 @@ let
       nvimLspAttribute = "bashls";
       settings = { };
     };
-    crystal = rec {
-      package = lsp.scry;
-      cmd = [ "${package}/bin/scry" ];
-      nvimLspAttribute = "scry";
-      settings = { };
-    };
+    # crystal = rec {
+    #   package = lsp.scry;
+    #   cmd = [ "${package}/bin/scry" ];
+    #   nvimLspAttribute = "scry";
+    #   settings = { };
+    # };
     css = rec {
       package = lsp.stylelint-lsp;
       cmd = [ "${package}/bin/stylelint-lsp" "--stdio" ];
