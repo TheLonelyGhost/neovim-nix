@@ -67,6 +67,7 @@ in
     '';
   }
   { plugin = pkgs.vimPlugins.nvim-treesitter-pyfold; }
+  { plugin = pkgs.vimPlugins.nvim-ts-rainbow; }
   {
     plugin = tree-sitter.nvim-treesitter.withPlugins (_: tree-sitter.tree-sitter.allGrammars);
     config = ''
@@ -82,6 +83,11 @@ in
         pyfold = {
           enable = true,
           custom_foldtext = true, -- sets provided foldtext on window where module is active
+        },
+        rainbow = {
+          enable = true,
+          extended_mode = true,
+          max_file_lines = 100000,
         },
       }
       EOH
