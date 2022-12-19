@@ -5,7 +5,7 @@ let
     inherit pkgs lsp;
   };
   thelonelyghostDefaults = import ../config { inherit pkgs; };
-  catppuccin = import ../plugins/catppuccin { inherit pkgs; };
+  catppuccin = import ../packages/nvim-catppuccin { inherit pkgs; };
 in
 [
   { plugin = pkgs.vimPlugins.editorconfig-vim; }
