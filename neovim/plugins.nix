@@ -124,6 +124,10 @@ in
             vim.fn["vsnip#anonymous"](args.body)
           end,
         },
+        mappings = {
+          ["<C-p>"] = cmp.mapping.select_prev_item(),
+          ["<C-n>"] = cmp.mapping.select_next_item(),
+        },
         formatting = {
           format = lspkind.cmp_format({
             mode = 'symbol_text',
