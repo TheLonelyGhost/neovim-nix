@@ -104,6 +104,7 @@ in
   { plugin = pkgs.vimPlugins.cmp-cmdline; }
   { plugin = pkgs.vimPlugins.cmp-path; }
   { plugin = pkgs.vimPlugins.cmp-nvim-lsp; }
+  { plugin = pkgs.vimPlugins.lspkind-nvim; }
   {
     plugin = pkgs.vimPlugins.nvim-cmp;
     config = ''
@@ -115,6 +116,7 @@ in
 
       lua <<EOH
       local cmp = require('cmp')
+      local lspkind = require('lspkind')
 
       cmp.setup({
         snippet = {
@@ -122,12 +124,17 @@ in
             vim.fn["vsnip#anonymous"](args.body)
           end,
         },
-        sources = cmp.config.sources({
+        formatting = {
+          format = lspkind.cmp_format({
+            mode = 'symbol_text',
+            max_width = 50,
+          }),
+        },
+        sources = {
           { name = 'nvim_lsp' },
           { name = 'vsnip' },
-        }, {
           { name = 'buffer' },
-        }),
+        },
       })
       EOH
     '';
