@@ -13,6 +13,7 @@
     lsp-nix.inputs.flake-utils.follows = "flake-utils";
     lsp-nix.inputs.flake-compat.follows = "flake-compat";
     tree-sitter-nix.url = "github:thelonelyghost/tree-sitter-nix";
+    tree-sitter-nix.inputs.nixpkgs.follows = "nixpkgs";
     tree-sitter-nix.inputs.overlays.follows = "overlays";
     tree-sitter-nix.inputs.flake-utils.follows = "flake-utils";
     tree-sitter-nix.inputs.flake-compat.follows = "flake-compat";

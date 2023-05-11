@@ -55,7 +55,7 @@ in
   # { plugin = pkgs.vimPlugins.vim-polyglot; }
 
   {
-    plugin = pkgs.vimPlugins.nvim-treesitter-context;
+    plugin = tree-sitter.nvim-treesitter-context;
     config = ''
       lua <<EOH
       require'treesitter-context'.setup {
@@ -66,8 +66,8 @@ in
       EOH
     '';
   }
-  { plugin = pkgs.vimPlugins.nvim-treesitter-pyfold; }
-  { plugin = pkgs.vimPlugins.nvim-ts-rainbow; }
+  { plugin = tree-sitter.nvim-treesitter-pyfold; }
+  { plugin = tree-sitter.nvim-ts-rainbow; }
   {
     plugin = tree-sitter.nvim-treesitter.withPlugins (_: tree-sitter.tree-sitter.allGrammars);
     config = ''

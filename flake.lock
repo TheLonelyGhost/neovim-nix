@@ -88,20 +88,6 @@
         "type": "indirect"
       }
     },
-    "nixpkgs_3": {
-      "locked": {
-        "lastModified": 1668231603,
-        "narHash": "sha256-/4br947zgRqABb52iLF4DCHgD49Fw5aQ6/IdTwaM95E=",
-        "owner": "NixOS",
-        "repo": "nixpkgs",
-        "rev": "d8f2c4d846a2e65ad3f5a5e842b672f0b81588a2",
-        "type": "github"
-      },
-      "original": {
-        "id": "nixpkgs",
-        "type": "indirect"
-      }
-    },
     "overlays": {
       "locked": {
         "lastModified": 1668714812,
@@ -150,17 +136,19 @@
         "flake-utils": [
           "flake-utils"
         ],
-        "nixpkgs": "nixpkgs_3",
+        "nixpkgs": [
+          "nixpkgs"
+        ],
         "overlays": [
           "overlays"
         ]
       },
       "locked": {
-        "lastModified": 1671395226,
-        "narHash": "sha256-BL17lH7ivJEu3IEwB4B4eYk/YXJ2ovNpr66HmCKDNwg=",
+        "lastModified": 1683782750,
+        "narHash": "sha256-2jh0kude4U8bGWs3VNjxsRa2pRrNKtRVgYIAZNBGcno=",
         "owner": "thelonelyghost",
         "repo": "tree-sitter-nix",
-        "rev": "38574262f942b615d9559c3e3141a6502f81e537",
+        "rev": "9bf8261c72d3024d5267f7ac77bf50a8eca32a3a",
         "type": "github"
       },
       "original": {
