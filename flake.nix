@@ -1,7 +1,7 @@
 {
   description = "Neovim in a box";
   inputs = {
-    nixpkgs.url = "flake:nixpkgs";
+    nixpkgs.url = "github:NixOS/nixpkgs/075dce259f6ced5cee1226dd76474d0674b54e64";
 
     flake-utils.url = "flake:flake-utils";
     flake-compat.url = "github:edolstra/flake-compat";
