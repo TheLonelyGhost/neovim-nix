@@ -42,6 +42,9 @@
             pkgs.gnumake
             pkgs.statix
           ];
+
+          STATIX = "${pkgs.statix}/bin/statix";
+
           buildInputs = [
             neovim
           ];
