@@ -29,6 +29,10 @@
         lsp = lsp-nix.outputs.packages."${system}";
         tree-sitter = tree-sitter-nix.outputs.packages."${system}";
 
+        statix-check = import ./packages/statix-check {
+          inherit pkgs lsp;
+        };
+
         neovim = import ./neovim { inherit pkgs lsp tree-sitter; };
       in
       {
@@ -44,7 +48,7 @@
         };
 
         packages = {
-          inherit neovim;
+          inherit neovim statix-check;
 
           default = neovim;
         };

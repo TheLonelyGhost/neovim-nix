@@ -5,17 +5,7 @@ let
 
   ruffConfig = ../../config/ruff.toml;
 
-  statix-check = pkgs.writeShellApplication {
-    name = "statix-check";
-
-    runtimeInputs = [
-      lsp.statix
-    ];
-
-    text = ''
-      statix check "$@" && printf '{"report": []}\n'
-    '';
-  };
+  statix-check = import ../../packages/statix-check { inherit pkgs lsp; };
 
   #
   # THIS IS THE SECTION YOU WANT TO MODIFY {{
