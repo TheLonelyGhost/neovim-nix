@@ -68,6 +68,7 @@ in
   }
   { plugin = tree-sitter.nvim-treesitter-pyfold; }
   { plugin = tree-sitter.nvim-ts-rainbow; }
+  { plugin = tree-sitter.nvim-treesitter-textobjects; }
   {
     plugin = tree-sitter.nvim-treesitter.withPlugins (_: tree-sitter.tree-sitter.allGrammars);
     config = ''
@@ -79,6 +80,16 @@ in
         },
         indent = {
           enable = true,
+        },
+        textobjects = {
+          select = {
+            enable = true,
+            lookahead = true,
+          },
+          lsp_interop = {
+            enable = true,
+            border = 'none',
+          },
         },
         pyfold = {
           enable = true,
