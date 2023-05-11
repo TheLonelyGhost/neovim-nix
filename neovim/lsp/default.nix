@@ -7,6 +7,7 @@ let
 in
 {
   plugin = pkgs.vimPlugins.nvim-lspconfig;
+  inherit (lspTools) buildInputs;
   config = builtins.concatStringsSep "\n\n" [
     "lua <<EOH"
     lspTools.config

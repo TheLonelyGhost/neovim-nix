@@ -11,16 +11,16 @@ let
   # THIS IS THE SECTION YOU WANT TO MODIFY {{
   allLinters = {
     # @see: https://github.com/iamcco/diagnostic-languageserver/wiki/Linters
-    ruff = rec {
+    ruff = {
       # meta
       package = lsp.ruff;
       filetypes = [ "python" ];
 
       # direct translation
-      command = "${package}/bin/ruff";
+      command = "ruff";
       args = [ "--format" "json" "--config" ruffConfig "--stdin-filename" "%filepath" "-" ];
       debounce = 100;
-      sourceName = package.pname;
+      sourceName = "ruff";
       parseJson = {
         sourceName = "filename";
         line = "location.row";
@@ -33,17 +33,17 @@ let
       #   undefined = "warning";
       # };
     };
-    golangci-lint = rec {
+    golangci-lint = {
       # meta
       package = lsp.golangci-lint;
       filetypes = [ "go" "gomod" ];
 
       # direct translation
-      command = "${package}/bin/golangci-lint";
+      command = "golangci-lint";
       args = [ "run" "--out-format" "json" ];
       rootPatterns = [ ".git" "go.mod" ];
       debounce = 100;
-      sourceName = package.pname;
+      sourceName = "golangci-lint";
       parseJson = {
         sourceName = "Pos.Filename";
         sourceNameFilter = true;
@@ -53,16 +53,16 @@ let
         message = ''[''${FromLinter}] ''${Text}'';
       };
     };
-    hadolint = rec {
+    hadolint = {
       # meta
       package = lsp.hadolint;
       filetypes = [ "dockerfile" ];
 
       # direct translation
-      command = "${package}/bin/hadolint";
+      command = "hadolint";
       args = [ "-f" "json" "-" ];
       rootPatterns = [ ".hadolint.yaml" ];
-      sourceName = package.pname;
+      sourceName = "hadolint";
       parseJson = {
         line = "line";
         column = "column";
@@ -76,15 +76,15 @@ let
         style = "hint";
       };
     };
-    statix = rec {
+    statix = {
       # meta
       package = lsp.statix;
       filetypes = [ "nix" ];
 
       # direct translation
-      command = "${statix-check}/bin/statix-check";
+      command = "statix-check";
       args = [ "--format" "json" "--stdin" ];
-      sourceName = package.pname;
+      sourceName = "statix";
       debounce = 100;
       parseJson = {
         # sourceName = "file";
@@ -102,17 +102,17 @@ let
         Hint = "hint";
       };
     };
-    rubocop = rec {
+    rubocop = {
       # meta
       package = lsp.rubocop;
       filetypes = [ "ruby" "erb" ];
 
       # direct translation
-      command = "${package}/bin/rubocop";
+      command = "rubocop";
       args = [ "--format" "json" "--force-exclusion" "--stdin" "%filepath" ];
       rootPatterns = [ ".git" "go.mod" ];
       debounce = 100;
-      sourceName = package.pname or "rubocop";
+      sourceName = "rubocop";
       parseJson = {
         errorsRoot = "files[0].offenses";
         line = "location.start_line";
@@ -131,18 +131,18 @@ let
         info = "info";
       };
     };
-    shellcheck = rec {
+    shellcheck = {
       # meta
       package = lsp.shellcheck;
       filetypes = [ "sh" ];
 
       # direct translation
-      command = "${package}/bin/shellcheck";
+      command = "shellcheck";
       debounce = 100;
       args = [ "--format=json" "-" ];
       # offsetLine = 0;
       # offsetColumn = 0;
-      sourceName = package.pname;
+      sourceName = "shellcheck";
       # formatLines = 1;
       parseJson = {
         # sourceName = "file";
@@ -160,13 +160,13 @@ let
         sytle = "hint";
       };
     };
-    standard = rec {
+    standard = {
       # meta
       package = lsp.standard;
       filetypes = [ "javascript" ];
 
       # direct translation
-      command = "${package}/bin/standard";
+      command = "standard";
       args = [ "--stdin" "--verbose" ];
       isStdErr = false;
       isStdOut = true;
@@ -174,7 +174,7 @@ let
       debounce = 100;
       offsetLine = 0;
       offsetColumn = 0;
-      sourceName = package.pname or "standardjs";
+      sourceName = "standardjs";
       formatLines = 1;
       formatPattern = [
         ''^\\s*<\\w+>:(\\d+):(\\d+):\\s+(.*)(\\r|\\n)*$''
@@ -185,13 +185,13 @@ let
         }
       ];
     };
-    ts-standard = rec {
+    ts-standard = {
       # meta
       package = lsp.ts-standard;
       filetypes = [ "typescript" ];
 
       # direct translation
-      command = "${package}/bin/ts-standard";
+      command = "ts-standard";
       args = [ "--stdin" "--verbose" ];
       isStdErr = false;
       isStdOut = true;
@@ -199,7 +199,7 @@ let
       debounce = 100;
       offsetLine = 0;
       offsetColumn = 0;
-      sourceName = package.pname or "ts-standard";
+      sourceName = "ts-standard";
       formatLines = 1;
       formatPattern = [
         ''^\\s*<\\w+>:(\\d+):(\\d+):\\s+(.*)(\\r|\\n)*$''
@@ -210,16 +210,16 @@ let
         }
       ];
     };
-    vale = rec {
+    vale = {
       # meta
       package = lsp.vale;
       filetypes = [ "markdown" ];
 
       # direct translation
-      command = "${package}/bin/vale";
+      command = "vale";
       debounce = 100;
       args = [ "--no-exit" "--output" "JSON" "--ext" ".md" ];
-      sourceName = package.pname;
+      sourceName = "vale";
       parseJson = {
         errorsRoot = "stdin.md";
         # sourceName = "file";
@@ -236,18 +236,18 @@ let
         suggestion = "info";
       };
     };
-    vint = rec {
+    vint = {
       # meta
       package = lsp.vint;
       filetypes = [ "vim" ];
 
       # direct translation
-      command = "${package}/bin/vint";
+      command = "vint";
       debounce = 100;
       args = [ "--enable-neovim" "-f" "{file_path}:{line_number}:{column_number}: {severity}! {description}" "-" ];
       offsetLine = 0;
       offsetColumn = 0;
-      sourceName = package.pname;
+      sourceName = "vint";
       formatLines = 1;
       formatPattern = [
         ''[^:]+:(\\d+):(\\d+):\\s*([^!]*)! (.*)(\\r|\\n)*$''
@@ -267,31 +267,31 @@ let
   };
   allFormatters = {
     # @see: https://github.com/iamcco/diagnostic-languageserver/wiki/Formatters
-    ruff = rec {
+    ruff = {
       # meta
       package = lsp.ruff;
       filetypes = [ "python" ];
 
       # direct translation
-      command = "${package}/bin/ruff";
+      command = "ruff";
       args = [ "--format" "json" "--config" ruffConfig "--stdin-filename" "%filepath" "--fix" "-" ];
     };
-    statix = rec {
+    statix = {
       # meta
       package = lsp.statix;
       filetypes = [ "nix" ];
 
       # direct translation
-      command = "${package}/bin/statix";
+      command = "statix";
       args = [ "fix" "--stdin" ];
     };
-    yapf = rec {
+    yapf = {
       # meta
       package = lsp.yapf;
       filetypes = [ "python" ];
 
       # direct translation
-      command = "${package}/bin/yapf";
+      command = "yapf";
       args = [ "--quiet" ];
     };
   };
@@ -322,6 +322,8 @@ let
 in
 {
   inherit linters formatters;
+
+  buildInputs = (utils.collectBuildInputs linters) ++ (utils.collectBuildInputs formatters);
 
   config = ''
     -- Language: Diagnostics

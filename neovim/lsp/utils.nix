@@ -50,7 +50,7 @@ in
     builtins.elem lang (builtins.attrNames tools);
 
   collectBuildInputs = tools:
-    pkgs.lib.unique (builtins.map (k: v: v.package) tools);
+    pkgs.lib.unique (pkgs.lib.mapAttrsToList (k: v: v.package) tools);
 
   filterSupportedTools = pkgs.lib.filterAttrs (k: v: lib.isSupportedDrv v.package);
 }
