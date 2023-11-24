@@ -1,0 +1,22 @@
+---
+jobs:
+  flakehub-publish:
+    permissions:
+      contents: read
+      id-token: write
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: DeterminateSystems/nix-installer-action@main
+      - uses: DeterminateSystems/flakehub-push@main
+        with:
+          name: TheLonelyGhost/neovim
+          rolling: true
+          visibility: public
+
+name: "Publish every Git push to main to FlakeHub"
+
+on:
+  push:
+    branches:
+      - main
