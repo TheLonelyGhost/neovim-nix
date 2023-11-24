@@ -1,4 +1,4 @@
-{ pkgs, lsp, tree-sitter, ... }:
+{ pkgs, lsp, ... }:
 
 let
   nvim-lsp = import ./lsp {
@@ -55,7 +55,7 @@ in
   # { plugin = pkgs.vimPlugins.vim-polyglot; }
 
   {
-    plugin = tree-sitter.nvim-treesitter-context;
+    plugin = pkgs.vimPlugins.nvim-treesitter-context;
     config = ''
       lua <<EOH
       require'treesitter-context'.setup {
@@ -66,11 +66,11 @@ in
       EOH
     '';
   }
-  { plugin = tree-sitter.nvim-treesitter-pyfold; }
-  { plugin = tree-sitter.nvim-ts-rainbow; }
-  { plugin = tree-sitter.nvim-treesitter-textobjects; }
+  { plugin = pkgs.vimPlugins.nvim-treesitter-pyfold; }
+  { plugin = pkgs.vimPlugins.nvim-ts-rainbow; }
+  { plugin = pkgs.vimPlugins.nvim-treesitter-textobjects; }
   {
-    plugin = tree-sitter.nvim-treesitter.withPlugins (_: tree-sitter.tree-sitter.allGrammars);
+    plugin = pkgs.vimPlugins.nvim-treesitter.withAllGrammars;
     config = ''
       lua <<EOH
       require'nvim-treesitter.configs'.setup {

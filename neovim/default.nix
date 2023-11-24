@@ -1,4 +1,4 @@
-{ pkgs, lsp, tree-sitter, ... }:
+{ pkgs, lsp, ... }:
 
 let
   pluginUtils = import ../libs/plugin-utils.nix { inherit pkgs; };
@@ -8,7 +8,7 @@ let
   };
   pathSuffixes = pkgs.lib.makeBinPath nvim-lsp.builtInputs;
 
-  plugins = pluginUtils.normalizePlugins (import ./plugins.nix { inherit pkgs lsp tree-sitter; });
+  plugins = pluginUtils.normalizePlugins (import ./plugins.nix { inherit pkgs lsp; });
 
   neovimConfig = pkgs.neovimUtils.makeNeovimConfig { inherit plugins; };
 

@@ -16,18 +16,9 @@
         flake-compat.follows = "flake-compat";
       };
     };
-    tree-sitter-nix = {
-      url = "github:thelonelyghost/tree-sitter-nix";
-      inputs = {
-        nixpkgs.follows = "nixpkgs";
-        overlays.follows = "overlays";
-        flake-utils.follows = "flake-utils";
-        flake-compat.follows = "flake-compat";
-      };
-    };
   };
 
-  outputs = { self, nixpkgs, flake-utils, flake-compat, overlays, lsp-nix, tree-sitter-nix }:
+  outputs = { self, nixpkgs, flake-utils, flake-compat, overlays, lsp-nix }:
     flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = import nixpkgs {
@@ -36,13 +27,12 @@
           overlays = [overlays.overlays.default];
         };
         lsp = lsp-nix.outputs.packages."${system}";
-        tree-sitter = tree-sitter-nix.outputs.packages."${system}";
 
         statix-check = import ./packages/statix-check {
           inherit pkgs lsp;
         };
 
-        neovim = import ./neovim { inherit pkgs lsp tree-sitter; };
+        neovim = import ./neovim { inherit pkgs lsp; };
       in
       {
         devShells.default = pkgs.mkShell {
