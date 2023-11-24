@@ -1,6 +1,6 @@
 { pkgs, ... }:
 
-pkgs.vimUtils.buildVimPluginFrom2Nix {
+pkgs.vimUtils.buildVimPlugin {
   pname = "tlg-defaults";
   version = "2022-11-12";
   src = ./thelonelyghost-defaults;

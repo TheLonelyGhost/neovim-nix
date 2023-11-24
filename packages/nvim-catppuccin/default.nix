@@ -3,7 +3,7 @@
 let
   version = "0.2.6";
 in
-pkgs.vimUtils.buildVimPluginFrom2Nix {
+pkgs.vimUtils.buildVimPlugin {
   pname = "catppuccin-nvim";
   inherit version;
 
