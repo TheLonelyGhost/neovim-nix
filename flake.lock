@@ -47,31 +47,32 @@
         ]
       },
       "locked": {
-        "lastModified": 1683776382,
-        "narHash": "sha256-zV4g9IGuquS6/Xw4EyTrI981JqyKz1MB6/BP2vXhg0c=",
-        "owner": "thelonelyghost",
-        "repo": "lsp-nix",
-        "rev": "87877644758d82c4fac61adca3395af62d579f43",
-        "type": "github"
+        "lastModified": 1700856570,
+        "narHash": "sha256-oigsY/BKSGCZCESYhuJ9rxFk+qrsbtYbbPB9GOM/E54=",
+        "rev": "465857a8db6d301f95d8c585380c3ff06dffc5b7",
+        "revCount": 20,
+        "type": "tarball",
+        "url": "https://api.flakehub.com/f/pinned/TheLonelyGhost/lsp/0.1.20%2Brev-465857a8db6d301f95d8c585380c3ff06dffc5b7/018c02f4-7614-72e8-bbb3-c6fc0f73f7d5/source.tar.gz"
       },
       "original": {
-        "owner": "thelonelyghost",
-        "repo": "lsp-nix",
-        "type": "github"
+        "type": "tarball",
+        "url": "https://flakehub.com/f/TheLonelyGhost/lsp/%2A.tar.gz"
       }
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1683717387,
-        "narHash": "sha256-b4GSeKtDH+7wzw9VptHqIWOyIq28j7++rvRqhCEWFQ8=",
+        "lastModified": 1700772233,
+        "narHash": "sha256-Y66FIsSNcmatXJegb0EadV7WRzhu+rTmjmT/sn2TbrU=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "1e8ab5db89c84b1bb29d8d10ea60766bb5cee1f2",
+        "rev": "4ce4354d70ada7582c1ea89ac8feed63c13273c5",
         "type": "github"
       },
       "original": {
-        "id": "nixpkgs",
-        "type": "indirect"
+        "owner": "NixOS",
+        "ref": "nixos-23.11-small",
+        "repo": "nixpkgs",
+        "type": "github"
       }
     },
     "nixpkgs_2": {

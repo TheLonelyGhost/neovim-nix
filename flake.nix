@@ -9,7 +9,7 @@
     overlays.url = "github:thelonelyghost/blank-overlay-nix";
 
     lsp-nix = {
-      url = "github:thelonelyghost/lsp-nix";
+      url = "https://flakehub.com/f/TheLonelyGhost/lsp/*.tar.gz";
       inputs = {
         overlays.follows = "overlays";
         flake-utils.follows = "flake-utils";
