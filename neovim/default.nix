@@ -17,7 +17,7 @@ let
     viAlias = true;
 
     extraMakeWrapperArgs = pkgs.lib.escapeShellArgs [
-      "--suffix" "PATH" ":" (pkgs.lib.makeBinPath nvim-lsp.buildInputs)
+      "--suffix" "PATH" ":" (pkgs.lib.makeBinPath (nvim-lsp.buildInputs ++ [pkgs.tree-sitter pkgs.nodejs pkgs.gcc]))
     ];
 
     configure = {
