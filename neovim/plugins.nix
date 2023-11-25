@@ -43,6 +43,10 @@ in
   }
   {
     plugin = pkgs.vimPlugins.telescope-nvim;
+    buildInputs = [
+      pkgs.ripgrep
+      pkgs.fd
+    ];
     config = ''
       lua <<EOH
       require('telescope').setup {
@@ -71,6 +75,11 @@ in
   { plugin = pkgs.vimPlugins.nvim-treesitter-textobjects; }
   {
     plugin = pkgs.vimPlugins.nvim-treesitter.withAllGrammars;
+    buildInputs = [
+      pkgs.tree-sitter
+      pkgs.nodejs
+      pkgs.gcc
+    ];
     config = ''
       lua <<EOH
       require'nvim-treesitter.configs'.setup {

@@ -10,6 +10,8 @@ let
 
   plugins = pluginUtils.normalizePlugins (import ./plugins.nix { inherit pkgs lsp; });
 
+  pluginBuildInputs = pkgs.lib.foldl (a: b: a ++ b.buildInputs) [] plugins;
+
   neovimConfig = pkgs.neovimUtils.makeNeovimConfig { inherit plugins; };
 
   neovim = pkgs.neovim.override {
@@ -17,7 +19,7 @@ let
     viAlias = true;
 
     extraMakeWrapperArgs = pkgs.lib.escapeShellArgs [
-      "--suffix" "PATH" ":" (pkgs.lib.makeBinPath (nvim-lsp.buildInputs ++ [pkgs.tree-sitter pkgs.nodejs pkgs.gcc]))
+      "--suffix" "PATH" ":" (pkgs.lib.makeBinPath pluginBuildInputs)
     ];
 
     configure = {
